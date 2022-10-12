@@ -1,0 +1,362 @@
+<!doctype html><html lang=en><head><title>i.MX8 yocto环境搭建 · shuiyuehd's Blog</title><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=color-scheme content="light dark"><meta name=author content="shuiyuehd"><meta name=description content="shuiyuehd's personal website"><meta name=keywords content="blog,developer,personal"><meta name=twitter:card content="summary"><meta name=twitter:title content="i.MX8 yocto环境搭建"><meta name=twitter:description content><meta property="og:title" content="i.MX8 yocto环境搭建"><meta property="og:description" content><meta property="og:type" content="article"><meta property="og:url" content="https://shuiyuehd.cn/posts/imx8-yocto-project-setup/"><meta property="article:section" content="posts"><meta property="article:published_time" content="2021-05-06T00:00:00+00:00"><meta property="article:modified_time" content="2021-05-06T00:00:00+00:00"><link rel=canonical href=https://shuiyuehd.cn/posts/imx8-yocto-project-setup/><link rel=preload href="/fonts/forkawesome-webfont.woff2?v=1.2.0" as=font type=font/woff2 crossorigin><link rel=stylesheet href=/css/coder.min.c4d7e93a158eda5a65b3df343745d2092a0a1e2170feeec909b8a89443903c6a.css integrity="sha256-xNfpOhWO2lpls980N0XSCSoKHiFw/u7JCbiolEOQPGo=" crossorigin=anonymous media=screen><link rel=stylesheet href=/css/coder-dark.min.78b5fe3864945faf5207fb8fe3ab2320d49c3365def0e88ac1df0ddadc54a03c.css integrity="sha256-eLX+OGSUX69SB/uP46sjINScM2Xe8OiKwd8N2txUoDw=" crossorigin=anonymous media=screen><link rel=stylesheet href=/scss/css/custom.min.5ee0ad9e8f1b17d7a2309a71c69cb872e2afd31d618222760117de63b651a440.css integrity="sha256-XuCtno8bF9eiMJpxxpy4cuKv0x1hgiJ2ARfeY7ZRpEA=" crossorigin=anonymous media=screen><link rel=stylesheet href=/scss/custom.min.85f403ff232218bd8e612424d1885bb4d57fd440764fa75faecb6ceb511c75b4.css integrity="sha256-hfQD/yMiGL2OYSQk0YhbtNV/1EB2T6dfrsts61EcdbQ=" crossorigin=anonymous media=screen><link rel=icon type=image/png href=/images/favicon-32x32.png sizes=32x32><link rel=icon type=image/png href=/images/favicon-16x16.png sizes=16x16><link rel=apple-touch-icon href=/images/apple-touch-icon.png><link rel=apple-touch-icon sizes=180x180 href=/images/apple-touch-icon.png><link rel=manifest href=/site.webmanifest><link rel=mask-icon href=/images/safari-pinned-tab.svg color=#5bbad5><meta name=generator content="Hugo 0.104.3"></head><body class="preload-transitions colorscheme-auto"><div class=float-container><a id=dark-mode-toggle class=colorscheme-toggle><i class="fa fa-adjust fa-fw" aria-hidden=true></i></a></div><main class=wrapper><nav class=navigation><section class=container><a class=navigation-title href=/>shuiyuehd's Blog</a>
+<input type=checkbox id=menu-toggle>
+<label class="menu-button float-right" for=menu-toggle><i class="fa fa-bars fa-fw" aria-hidden=true></i></label><ul class=navigation-list><li class=navigation-item><a class=navigation-link href=/about/>About</a></li><li class=navigation-item><a class=navigation-link href=/posts/>Posts</a></li><li class=navigation-item><a class=navigation-link href=/contact/>Contact</a></li></ul></section></nav><div class=content><section class="container post"><article><header><div class=post-title><h1 class=title><a class=title-link href=https://shuiyuehd.cn/posts/imx8-yocto-project-setup/>i.MX8 yocto环境搭建</a></h1></div><div class=post-meta><div class=date><span class=posted-on><i class="fa fa-calendar" aria-hidden=true></i>
+<time datetime=2021-05-06T00:00:00Z>2021-05-06</time></span>
+<span class=reading-time><i class="fa fa-clock-o" aria-hidden=true></i>
+7-minute read</span></div><div class=categories><i class="fa fa-folder" aria-hidden=true></i>
+<a href=/categories/yocto/>yocto</a></div><div class=tags><i class="fa fa-tag" aria-hidden=true></i>
+<span class=tag><a href=/tags/yocto/>yocto</a></span>
+<span class=separator>•</span>
+<span class=tag><a href=/tags/imx8/>imx8</a></span></div></div></header><div><h2 id=一imx8创建yocto编译环境>一、IMX8创建yocto编译环境：
+<a class=heading-link href=#%e4%b8%80imx8%e5%88%9b%e5%bb%bayocto%e7%bc%96%e8%af%91%e7%8e%af%e5%a2%83><i class="fa fa-link" aria-hidden=true title="Link to heading"></i>
+<span class=sr-only>Link to heading</span></a></h2><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>IMX8的yocto环境对Ubuntu系统的最低版本要求为18.04;
+</span></span><span style=display:flex><span>5.4.24 BSP需要python3支持，所以需要用ubuntu18.04(16.04和14.04不支持python3)，
+</span></span></code></pre></div><h3 id=ubuntu-1804编译主机需要事先执行以下命令安装编译所需包>Ubuntu 18.04编译主机需要事先执行以下命令安装编译所需包：
+<a class=heading-link href=#ubuntu-1804%e7%bc%96%e8%af%91%e4%b8%bb%e6%9c%ba%e9%9c%80%e8%a6%81%e4%ba%8b%e5%85%88%e6%89%a7%e8%a1%8c%e4%bb%a5%e4%b8%8b%e5%91%bd%e4%bb%a4%e5%ae%89%e8%a3%85%e7%bc%96%e8%af%91%e6%89%80%e9%9c%80%e5%8c%85><i class="fa fa-link" aria-hidden=true title="Link to heading"></i>
+<span class=sr-only>Link to heading</span></a></h3><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>sudo apt-get update
+</span></span><span style=display:flex><span>sudo apt-get install gawk wget git-core diffstat unzip texinfo gcc-multilib build-essential chrpath socat libsdl1.2-dev
+</span></span><span style=display:flex><span>sudo apt-get install libsdl1.2-dev xterm sed cvs subversion coreutils texi2html docbook-utils python-pysqlite2 help2man
+</span></span><span style=display:flex><span>sudo apt-get install make gcc g++ desktop-file-utils libgl1-mesa-dev libglu1-mesa-dev mercurial autoconf automake groff curl lzop asciidoc
+</span></span><span style=display:flex><span>sudo apt-get install u-boot-tools
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>git config --global user.name xxx
+</span></span><span style=display:flex><span>git config --global user.email xxx@xxx.com
+</span></span><span style=display:flex><span>git config –list
+</span></span></code></pre></div><h4 id=编译配置命令如下>编译配置命令如下：
+<a class=heading-link href=#%e7%bc%96%e8%af%91%e9%85%8d%e7%bd%ae%e5%91%bd%e4%bb%a4%e5%a6%82%e4%b8%8b><i class="fa fa-link" aria-hidden=true title="Link to heading"></i>
+<span class=sr-only>Link to heading</span></a></h4><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>DISTRO=fsl-imx-xwayland  MACHINE=imx8qxpc0mek source imx-setup-release.sh -b build_xwayland_imx8qxpc0mek
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>DISTRO=fsl-imx-xwayland  MACHINE=imx8qxpc0mek source imx-setup-release.sh -b imx8qxpc0mek_xwayland
+</span></span></code></pre></div><h4 id=清除中间文件节约硬盘空间>清除中间文件，节约硬盘空间：
+<a class=heading-link href=#%e6%b8%85%e9%99%a4%e4%b8%ad%e9%97%b4%e6%96%87%e4%bb%b6%e8%8a%82%e7%ba%a6%e7%a1%ac%e7%9b%98%e7%a9%ba%e9%97%b4><i class="fa fa-link" aria-hidden=true title="Link to heading"></i>
+<span class=sr-only>Link to heading</span></a></h4><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>修改imx-yocto-bsp/build-xwayland/conf/local.conf文件
+</span></span></code></pre></div><p>添加下面这行，可以在编译完成后删除中间文件；</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>INHERIT += <span style=font-style:italic>&#34;rm_work&#34;</span>
+</span></span></code></pre></div><h4 id=设置编译的线程数目>设置编译的线程数目：
+<a class=heading-link href=#%e8%ae%be%e7%bd%ae%e7%bc%96%e8%af%91%e7%9a%84%e7%ba%bf%e7%a8%8b%e6%95%b0%e7%9b%ae><i class="fa fa-link" aria-hidden=true title="Link to heading"></i>
+<span class=sr-only>Link to heading</span></a></h4><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>BB_NUMBER_THREADS = <span style=font-style:italic>&#39;4&#39;</span>
+</span></span><span style=display:flex><span>PARALLEL_MAKE = <span style=font-style:italic>&#39;-j 4&#39;</span>
+</span></span></code></pre></div><h3 id=bitbake显示所有的编译操作>bitbake显示所有的编译操作：
+<a class=heading-link href=#bitbake%e6%98%be%e7%a4%ba%e6%89%80%e6%9c%89%e7%9a%84%e7%bc%96%e8%af%91%e6%93%8d%e4%bd%9c><i class="fa fa-link" aria-hidden=true title="Link to heading"></i>
+<span class=sr-only>Link to heading</span></a></h3><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>ubuntu@ubuntu:~/imx8-yocto-bsp-5.4.24/imx8qxpc0mek_xwayland$ bitbake imx-image-full -c listtasks
+</span></span><span style=display:flex><span>Loading cache: 100% |<span style=font-style:italic>##########################################################################################################| Time: 0:00:00</span>
+</span></span><span style=display:flex><span>Loaded 4671 entries from dependency cache.
+</span></span><span style=display:flex><span>Parsing recipes: 100% |<span style=font-style:italic>########################################################################################################| Time: 0:00:00</span>
+</span></span><span style=display:flex><span>Parsing of 3213 .bb files complete (3211 cached, 2 parsed). 4671 targets, 238 skipped, 2 masked, 0 errors.
+</span></span><span style=display:flex><span>NOTE: Resolving any missing task queue dependencies
+</span></span><span style=display:flex><span>Build Configuration:
+</span></span><span style=display:flex><span>BB_VERSION           = <span style=font-style:italic>&#34;1.44.0&#34;</span>
+</span></span><span style=display:flex><span>BUILD_SYS            = <span style=font-style:italic>&#34;x86_64-linux&#34;</span>
+</span></span><span style=display:flex><span>NATIVELSBSTRING      = <span style=font-style:italic>&#34;ubuntu-18.04&#34;</span>
+</span></span><span style=display:flex><span>TARGET_SYS           = <span style=font-style:italic>&#34;aarch64-poky-linux&#34;</span>
+</span></span><span style=display:flex><span>MACHINE              = <span style=font-style:italic>&#34;imx8qxpc0mek&#34;</span>
+</span></span><span style=display:flex><span>DISTRO               = <span style=font-style:italic>&#34;fsl-imx-xwayland&#34;</span>
+</span></span><span style=display:flex><span>DISTRO_VERSION       = <span style=font-style:italic>&#34;5.4-zeus&#34;</span>
+</span></span><span style=display:flex><span>TUNE_FEATURES        = <span style=font-style:italic>&#34;aarch64 cortexa35 crc crypto&#34;</span>
+</span></span><span style=display:flex><span>TARGET_FPU           = <span style=font-style:italic>&#34;&#34;</span>
+</span></span><span style=display:flex><span>meta
+</span></span><span style=display:flex><span>meta-poky            = <span style=font-style:italic>&#34;HEAD:cba967414370e195d109353e51510bd829aa86c3&#34;</span>
+</span></span><span style=display:flex><span>meta-oe
+</span></span><span style=display:flex><span>meta-multimedia
+</span></span><span style=display:flex><span>meta-python          = <span style=font-style:italic>&#34;HEAD:9e60d30669a2ad0598e9abf0cd15ee06b523986b&#34;</span>
+</span></span><span style=display:flex><span>meta-freescale       = <span style=font-style:italic>&#34;HEAD:c2a0d924f6200eea1fb1d1b61e7420ea5da2f8fb&#34;</span>
+</span></span><span style=display:flex><span>meta-freescale-3rdparty = <span style=font-style:italic>&#34;HEAD:dbcc686f52c3c84db8cb86aa8973a4e373651b98&#34;</span>
+</span></span><span style=display:flex><span>meta-freescale-distro = <span style=font-style:italic>&#34;HEAD:ca27d12e4964d1336e662bcc60184bbff526c857&#34;</span>
+</span></span><span style=display:flex><span>meta-bsp
+</span></span><span style=display:flex><span>meta-sdk
+</span></span><span style=display:flex><span>meta-ml              = <span style=font-style:italic>&#34;HEAD:a083ffbbc3f4d1c02b1542746784d7f641a75b60&#34;</span>
+</span></span><span style=display:flex><span>meta-browser         = <span style=font-style:italic>&#34;HEAD:5f365ef0f842ba4651efe88787cf9c63bc8b6cb3&#34;</span>
+</span></span><span style=display:flex><span>meta-rust            = <span style=font-style:italic>&#34;HEAD:a012a1027defe28495f06ed522a7a82bdd59a610&#34;</span>
+</span></span><span style=display:flex><span>meta-gnome
+</span></span><span style=display:flex><span>meta-networking
+</span></span><span style=display:flex><span>meta-filesystems     = <span style=font-style:italic>&#34;HEAD:9e60d30669a2ad0598e9abf0cd15ee06b523986b&#34;</span>
+</span></span><span style=display:flex><span>meta-qt5             = <span style=font-style:italic>&#34;HEAD:b8bcf8cb576d072f435a0177375e54424f67d1c9&#34;</span>
+</span></span><span style=display:flex><span>meta-python2         = <span style=font-style:italic>&#34;HEAD:231c3d74cfcf734c3415e86ea8dd97f73ddced9d&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Initialising tasks: 100% |<span style=font-style:italic>#####################################################################################################| Time: 0:00:02</span>
+</span></span><span style=display:flex><span>Sstate summary: Wanted 0 Found 0 Missed 0 Current 0 (0% match, 0% complete)
+</span></span><span style=display:flex><span>NOTE: No setscene tasks
+</span></span><span style=display:flex><span>NOTE: Executing Tasks
+</span></span><span style=display:flex><span>do_build                        Default task <span style=font-weight:700>for</span> a recipe - depends on all other normal tasks required to <span style=font-style:italic>&#39;build&#39;</span> a recipe
+</span></span><span style=display:flex><span>do_checkuri                     Validates the SRC_URI value
+</span></span><span style=display:flex><span>do_clean                        Removes all output files <span style=font-weight:700>for</span> a target
+</span></span><span style=display:flex><span>do_cleanall                     Removes all output files, shared state cache, and downloaded source files <span style=font-weight:700>for</span> a target
+</span></span><span style=display:flex><span>do_cleansstate                  Removes all output files and shared state cache <span style=font-weight:700>for</span> a target
+</span></span><span style=display:flex><span>do_compile                      Compiles the source in the compilation directory
+</span></span><span style=display:flex><span>do_configure                    Configures the source by enabling and disabling any build-time and configuration options <span style=font-weight:700>for</span> the software being built
+</span></span><span style=display:flex><span>do_devpyshell                   Starts an interactive Python shell <span style=font-weight:700>for</span> development/debugging
+</span></span><span style=display:flex><span>do_devshell                     Starts a shell with the environment set up <span style=font-weight:700>for</span> development/debugging
+</span></span><span style=display:flex><span>do_fetch                        Fetches the source code
+</span></span><span style=display:flex><span>do_image
+</span></span><span style=display:flex><span>do_image_complete
+</span></span><span style=display:flex><span>do_image_complete_setscene       (setscene version)
+</span></span><span style=display:flex><span>do_image_create_sdcard_symlink
+</span></span><span style=display:flex><span>do_image_qa
+</span></span><span style=display:flex><span>do_image_qa_setscene             (setscene version)
+</span></span><span style=display:flex><span>do_image_tar
+</span></span><span style=display:flex><span>do_image_wic
+</span></span><span style=display:flex><span>do_install                      Copies files from the compilation directory to a holding area
+</span></span><span style=display:flex><span>do_listtasks                    Lists all defined tasks <span style=font-weight:700>for</span> a target
+</span></span><span style=display:flex><span>do_package                      Analyzes the content of the holding area and splits it into subsets based on available packages and files
+</span></span><span style=display:flex><span>do_package_qa_setscene          Runs QA checks on packaged files (setscene version)
+</span></span><span style=display:flex><span>do_package_setscene             Analyzes the content of the holding area and splits it into subsets based on available packages and files (setscene version)
+</span></span><span style=display:flex><span>do_package_write_deb_setscene   Creates the actual DEB packages and places them in the Package Feed area (setscene version)
+</span></span><span style=display:flex><span>do_packagedata                  Creates package metadata used by the build system to generate the final packages
+</span></span><span style=display:flex><span>do_packagedata_setscene         Creates package metadata used by the build system to generate the final packages (setscene version)
+</span></span><span style=display:flex><span>do_patch                        Locates patch files and applies them to the source code
+</span></span><span style=display:flex><span>do_populate_lic                 Writes license information <span style=font-weight:700>for</span> the recipe that is collected later when the image is constructed
+</span></span><span style=display:flex><span>do_populate_lic_deploy
+</span></span><span style=display:flex><span>do_populate_lic_setscene        Writes license information <span style=font-weight:700>for</span> the recipe that is collected later when the image is constructed (setscene version)
+</span></span><span style=display:flex><span>do_populate_sdk                 Creates the file and directory structure <span style=font-weight:700>for</span> an installable SDK
+</span></span><span style=display:flex><span>do_populate_sdk_ext
+</span></span><span style=display:flex><span>do_populate_sysroot_setscene    Copies a subset of files installed by do_install into the sysroot in order to make them available to other recipes (setscene version)
+</span></span><span style=display:flex><span>do_prepare_recipe_sysroot
+</span></span><span style=display:flex><span>do_rootfs                       Creates the root filesystem (file and directory structure) <span style=font-weight:700>for</span> an image
+</span></span><span style=display:flex><span>do_rootfs_wicenv
+</span></span><span style=display:flex><span>do_sdk_depends
+</span></span><span style=display:flex><span>do_unpack                       Unpacks the source code into a working directory
+</span></span><span style=display:flex><span>do_write_wks_template
+</span></span><span style=display:flex><span>NOTE: Tasks Summary: Attempted 1 tasks of which 0 didn<span>&#39;</span>t need to be rerun and all succeeded.
+</span></span></code></pre></div><h4 id=yocto只下载指令>yocto只下载指令：
+<a class=heading-link href=#yocto%e5%8f%aa%e4%b8%8b%e8%bd%bd%e6%8c%87%e4%bb%a4><i class="fa fa-link" aria-hidden=true title="Link to heading"></i>
+<span class=sr-only>Link to heading</span></a></h4><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>bitbake imx-image-full --runall=fetch
+</span></span></code></pre></div><h4 id=可以直接获取-imx-image-full-支持包不编译>可以直接获取 imx-image-full 支持包，不编译；
+<a class=heading-link href=#%e5%8f%af%e4%bb%a5%e7%9b%b4%e6%8e%a5%e8%8e%b7%e5%8f%96-imx-image-full-%e6%94%af%e6%8c%81%e5%8c%85%e4%b8%8d%e7%bc%96%e8%af%91><i class="fa fa-link" aria-hidden=true title="Link to heading"></i>
+<span class=sr-only>Link to heading</span></a></h4><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>./bitbake_imx-image-full_fetchall.sh
+</span></span><span style=display:flex><span>测试发现：编译 do_populate_sdk 的有些关于QT的包不会下载；
+</span></span></code></pre></div><h4 id=编译--imx-image-full-的yocto环境>编译 imx-image-full 的yocto环境；
+<a class=heading-link href=#%e7%bc%96%e8%af%91--imx-image-full-%e7%9a%84yocto%e7%8e%af%e5%a2%83><i class="fa fa-link" aria-hidden=true title="Link to heading"></i>
+<span class=sr-only>Link to heading</span></a></h4><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>./bitbake_imx-image-full.sh
+</span></span></code></pre></div><h4 id=编译--imx-image-full-的yocto环境的sdk支持包>编译 imx-image-full 的yocto环境的SDK支持包；
+<a class=heading-link href=#%e7%bc%96%e8%af%91--imx-image-full-%e7%9a%84yocto%e7%8e%af%e5%a2%83%e7%9a%84sdk%e6%94%af%e6%8c%81%e5%8c%85><i class="fa fa-link" aria-hidden=true title="Link to heading"></i>
+<span class=sr-only>Link to heading</span></a></h4><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>./bitbake_imx-image-full.sh  do_populate_sdk
+</span></span></code></pre></div><h4 id=其中-bitbake_imx-image-fullsh-脚本如下>其中 ./bitbake_imx-image-full.sh 脚本如下：
+<a class=heading-link href=#%e5%85%b6%e4%b8%ad-bitbake_imx-image-fullsh-%e8%84%9a%e6%9c%ac%e5%a6%82%e4%b8%8b><i class="fa fa-link" aria-hidden=true title="Link to heading"></i>
+<span class=sr-only>Link to heading</span></a></h4><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span>#!/bin/bash
+</span></span></span><span style=display:flex><span><span></span>
+</span></span><span style=display:flex><span><span style=font-weight:700>if</span> [ $# = 1 ]; <span style=font-weight:700>then</span>
+</span></span><span style=display:flex><span>	do_task=<span style=font-style:italic>&#34;-c </span>$1<span style=font-style:italic>&#34;</span>
+</span></span><span style=display:flex><span><span style=font-weight:700>fi</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>echo <span style=font-style:italic>&#34;================ bitbake imx-image-full </span><span style=font-weight:700;font-style:italic>${</span>do_task<span style=font-weight:700;font-style:italic>}</span><span style=font-style:italic> ================&#34;</span>
+</span></span><span style=display:flex><span>echo <span style=font-style:italic>&#34;do_task:&#34;</span> <span style=font-weight:700;font-style:italic>${</span>do_task<span style=font-weight:700;font-style:italic>}</span>
+</span></span><span style=display:flex><span><span style=font-style:italic>#cp conf/bblayers_default.conf  conf/bblayers.conf</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>bitbake imx-image-full <span style=font-weight:700;font-style:italic>${</span>do_task<span style=font-weight:700;font-style:italic>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=font-weight:700>while</span> [ $? == 1 ]; <span style=font-weight:700>do</span>
+</span></span><span style=display:flex><span>	echo <span style=font-style:italic>&#34;================ bitbake imx-image-full failed, re-bitbake again ================&#34;</span>
+</span></span><span style=display:flex><span>	echo <span style=font-style:italic>&#34;do_task:&#34;</span> <span style=font-weight:700;font-style:italic>${</span>do_task<span style=font-weight:700;font-style:italic>}</span>
+</span></span><span style=display:flex><span>	sleep 10
+</span></span><span style=display:flex><span>	bitbake imx-image-full <span style=font-weight:700;font-style:italic>${</span>do_task<span style=font-weight:700;font-style:italic>}</span>
+</span></span><span style=display:flex><span><span style=font-weight:700>done</span>
+</span></span></code></pre></div><h2 id=二编译过程中问题记录与解决办法>二、编译过程中问题记录与解决办法
+<a class=heading-link href=#%e4%ba%8c%e7%bc%96%e8%af%91%e8%bf%87%e7%a8%8b%e4%b8%ad%e9%97%ae%e9%a2%98%e8%ae%b0%e5%bd%95%e4%b8%8e%e8%a7%a3%e5%86%b3%e5%8a%9e%e6%b3%95><i class="fa fa-link" aria-hidden=true title="Link to heading"></i>
+<span class=sr-only>Link to heading</span></a></h2><h4 id=1源码包fetch失败>1、源码包fetch失败：
+<a class=heading-link href=#1%e6%ba%90%e7%a0%81%e5%8c%85fetch%e5%a4%b1%e8%b4%a5><i class="fa fa-link" aria-hidden=true title="Link to heading"></i>
+<span class=sr-only>Link to heading</span></a></h4><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>遇到有些包fetch失败的情况，可以找到该包的bb文件，查看链接与版本，自行下载后移动到yocto目录下的download目录；
+</span></span></code></pre></div><p>以下列出编译过程中fetch失败的一些源码包的配置文件及下载链接；</p><h5 id=kernel-源码>kernel 源码：
+<a class=heading-link href=#kernel-%e6%ba%90%e7%a0%81><i class="fa fa-link" aria-hidden=true title="Link to heading"></i>
+<span class=sr-only>Link to heading</span></a></h5><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>KERNEL_SRC ?= <span style=font-style:italic>&#34;git://source.codeaurora.org/external/imx/linux-imx.git;protocol=https&#34;</span>
+</span></span><span style=display:flex><span><span style=font-style:italic>#KERNEL_SRC ?= &#34;git:///home/ubuntu/fsl-downloads/linux-imx;protocol=file&#34;</span>
+</span></span><span style=display:flex><span>git clone https://source.codeaurora.org/external/imx/linux-imx.git -b imx_5.4.24_2.1.0
+</span></span></code></pre></div><h5 id=uboot-源码>uboot 源码：
+<a class=heading-link href=#uboot-%e6%ba%90%e7%a0%81><i class="fa fa-link" aria-hidden=true title="Link to heading"></i>
+<span class=sr-only>Link to heading</span></a></h5><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>UBOOT_SRC ?= <span style=font-style:italic>&#34;git://source.codeaurora.org/external/imx/uboot-imx.git;protocol=https&#34;</span>
+</span></span><span style=display:flex><span>SRCBRANCH = <span style=font-style:italic>&#34;imx_v2020.04_5.4.24_2.1.0&#34;</span>
+</span></span><span style=display:flex><span>git clone https://source.codeaurora.org/external/imx/uboot-imx.git -b imx_v2020.04_5.4.24_2.1.0
+</span></span></code></pre></div><h5 id=opencv-源码>opencv 源码：
+<a class=heading-link href=#opencv-%e6%ba%90%e7%a0%81><i class="fa fa-link" aria-hidden=true title="Link to heading"></i>
+<span class=sr-only>Link to heading</span></a></h5><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>https://source.codeaurora.org/external/imx/opencv-imx/log/?h=4.2.0_imx
+</span></span><span style=display:flex><span>git clone https://source.codeaurora.org/external/imx/opencv-imx -b 4.2.0_imx
+</span></span></code></pre></div><h5 id=arm-computelibrary-imx-源码>arm-computelibrary-imx 源码：
+<a class=heading-link href=#arm-computelibrary-imx-%e6%ba%90%e7%a0%81><i class="fa fa-link" aria-hidden=true title="Link to heading"></i>
+<span class=sr-only>Link to heading</span></a></h5><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>ARM_COMPUTELIBRARY_SRC ?= <span style=font-style:italic>&#34;git://source.codeaurora.org/external/imx/arm-computelibrary-imx.git;protocol=https&#34;</span>
+</span></span><span style=display:flex><span>SRCBRANCH = <span style=font-style:italic>&#34;imx_19.08&#34;</span>
+</span></span><span style=display:flex><span>git clone https://source.codeaurora.org/external/imx/arm-computelibrary-imx.git -b imx_19.08
+</span></span></code></pre></div><h5 id=tensorflow-与-armnn-源码>tensorflow 与 armnn 源码：
+<a class=heading-link href=#tensorflow-%e4%b8%8e-armnn-%e6%ba%90%e7%a0%81><i class="fa fa-link" aria-hidden=true title="Link to heading"></i>
+<span class=sr-only>Link to heading</span></a></h5><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>SRC_URI = <span style=font-style:italic>&#34; \
+</span></span></span><span style=display:flex><span><span style=font-style:italic>		git://github.com/tensorflow/tensorflow.git;name=tensorflow;branch=r2.0  \
+</span></span></span><span style=display:flex><span><span style=font-style:italic>		git://github.com/ARM-software/armnn.git;name=armnn;subdir=</span><span style=font-weight:700;font-style:italic>${</span>WORKDIR<span style=font-weight:700;font-style:italic>}</span><span style=font-style:italic>/armnn;destsuffix=armnn \
+</span></span></span><span style=display:flex><span><span style=font-style:italic>	&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>修改bb文件，从文件获取源码：
+</span></span><span style=display:flex><span>SRC_URI = <span style=font-style:italic>&#34; \
+</span></span></span><span style=display:flex><span><span style=font-style:italic>	git:///home/ubuntu/fsl-downloads/tensorflow;protocol=file;name=tensorflow;branch=r2.0 \
+</span></span></span><span style=display:flex><span><span style=font-style:italic>	git:///home/ubuntu/fsl-downloads/armnn;protocol=file;name=armnn;subdir=</span><span style=font-weight:700;font-style:italic>${</span>WORKDIR<span style=font-weight:700;font-style:italic>}</span><span style=font-style:italic>/armnn;destsuffix=armnn \
+</span></span></span><span style=display:flex><span><span style=font-style:italic>&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>源码目录：
+</span></span><span style=display:flex><span>github.com.tensorflow.tensorflow.git
+</span></span><span style=display:flex><span>github.com.ARM-software.armnn.git
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Git下载源码：
+</span></span><span style=display:flex><span>git clone git://github.com/tensorflow/tensorflow.git -b r2.0
+</span></span><span style=display:flex><span>git clone git://github.com/ARM-software/armnn.git
+</span></span></code></pre></div><h4 id=2编译内核出错>2、编译内核出错：
+<a class=heading-link href=#2%e7%bc%96%e8%af%91%e5%86%85%e6%a0%b8%e5%87%ba%e9%94%99><i class="fa fa-link" aria-hidden=true title="Link to heading"></i>
+<span class=sr-only>Link to heading</span></a></h4><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>  CHK     include/generated/compile.h
+</span></span><span style=display:flex><span>  LD      vmlinux.o
+</span></span><span style=display:flex><span>  MODPOST vmlinux.o
+</span></span><span style=display:flex><span>  MODINFO modules.builtin.modinfo
+</span></span><span style=display:flex><span>  LD      .tmp_vmlinux1
+</span></span><span style=display:flex><span>Killed
+</span></span><span style=display:flex><span>/home/ubuntu/imx8-yocto-bsp-5.4.24/build_xwayland_imx8qxpc0mek/tmp/work-shared/imx8qxpc0mek/kernel-source/Makefile:1076: recipe <span style=font-weight:700>for</span> target <span style=font-style:italic>&#39;vmlinux&#39;</span> failed
+</span></span><span style=display:flex><span>make[1]: *** [vmlinux] Error 137
+</span></span><span style=display:flex><span>/home/ubuntu/imx8-yocto-bsp-5.4.24/build_xwayland_imx8qxpc0mek/tmp/work-shared/imx8qxpc0mek/kernel-source/Makefile:179: recipe <span style=font-weight:700>for</span> target <span style=font-style:italic>&#39;sub-make&#39;</span> failed
+</span></span><span style=display:flex><span>make: *** [sub-make] Error 2
+</span></span><span style=display:flex><span>WARNING: exit code 1 from a shell command.
+</span></span></code></pre></div><p>问题原因：</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>在编译过程中，内存不够了；
+</span></span></code></pre></div><p>解决方法：</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>大致思路就是新建虚拟内存。
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>先查看交换区：
+</span></span><span style=display:flex><span>	free -m
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>关闭交换分区：
+</span></span><span style=display:flex><span>	swapoff /swapfile
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>添加 swap 文件，大小设置为4G；
+</span></span><span style=display:flex><span>	dd if=/dev/zero of=/swapfile bs=1k count=2048000
+</span></span><span style=display:flex><span>	dd if=/dev/zero of=/swapfile bs=1k count=4096000
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>创建 swap 文件：
+</span></span><span style=display:flex><span>	mkswap /swapfile
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>激活 swap 文件：
+</span></span><span style=display:flex><span>	swapon /swapfile
+</span></span></code></pre></div><h4 id=3编译qtbase出错>3、编译qtbase出错：
+<a class=heading-link href=#3%e7%bc%96%e8%af%91qtbase%e5%87%ba%e9%94%99><i class="fa fa-link" aria-hidden=true title="Link to heading"></i>
+<span class=sr-only>Link to heading</span></a></h4><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>| Makefile:47: recipe <span style=font-weight:700>for</span> target <span style=font-style:italic>&#39;sub-auto-make_first&#39;</span> failed
+</span></span><span style=display:flex><span>| make[1]: *** [sub-auto-make_first] Error 2
+</span></span><span style=display:flex><span>| make[1]: Leaving directory <span style=font-style:italic>&#39;/home/ubuntu/imx8-yocto-bsp-5.4.24/build_xwayland_imx8qxpc0mek/tmp/work/aarch64-mx8-poky-linux/qtbase/5.14.99+5.15-beta3+gitAUTOINC+12fc3f5751-r0/build/tests&#39;</span>
+</span></span><span style=display:flex><span>| Makefile💯 recipe <span style=font-weight:700>for</span> target <span style=font-style:italic>&#39;sub-tests-make_first&#39;</span> failed
+</span></span><span style=display:flex><span>| make: *** [sub-tests-make_first] Error 2
+</span></span><span style=display:flex><span>| WARNING: exit code 1 from a shell command.
+</span></span></code></pre></div><p>解决办法：</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>	clean之后使用一个线程编译“-j1”
+</span></span></code></pre></div><h4 id=4编译opencv出错>4、编译opencv出错：
+<a class=heading-link href=#4%e7%bc%96%e8%af%91opencv%e5%87%ba%e9%94%99><i class="fa fa-link" aria-hidden=true title="Link to heading"></i>
+<span class=sr-only>Link to heading</span></a></h4><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>{standard input}: Assembler messages:
+</span></span><span style=display:flex><span>{standard input}:1359645: Warning: end of file not at end of a line; newline inserted
+</span></span><span style=display:flex><span>{standard input}: Error: open CFI at the end of file; missing .cfi_endproc directive
+</span></span><span style=display:flex><span>aarch64-poky-linux-g++: fatal error: Killed signal terminated program cc1plus
+</span></span><span style=display:flex><span>compilation terminated.
+</span></span></code></pre></div><p>解决办法：</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>虚拟机分配的内存小了，我之前分配的是2G，我将虚拟机的内存设置为4G后就make成功了！！！
+</span></span><span style=display:flex><span>发现是内存溢出（out of memory）造成的g++不能正常工作。扩大内存或者增大swap，或者取消MAKEOPTS=&#34;-j5&#34;就可以解决。
+</span></span><span style=display:flex><span>同上；
+</span></span></code></pre></div><h4 id=5编译opencv警告>5、编译opencv警告：
+<a class=heading-link href=#5%e7%bc%96%e8%af%91opencv%e8%ad%a6%e5%91%8a><i class="fa fa-link" aria-hidden=true title="Link to heading"></i>
+<span class=sr-only>Link to heading</span></a></h4><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>WARNING: opencv-4.2.0.imx-r0 do_patch: Fuzz detected:
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Applying patch download.patch
+</span></span><span style=display:flex><span>patching file cmake/OpenCVDownload.cmake
+</span></span><span style=display:flex><span>Hunk <span style=font-style:italic>#2 succeeded at 157 with fuzz 2 (offset 3 lines).</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>The context lines in the patches can be updated with devtool:
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>​	devtool modify opencv
+</span></span><span style=display:flex><span>​	devtool finish --force-patch-refresh opencv &lt;layer_path&gt;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Don<span>&#39;</span>t forget to review changes <span style=font-weight:700>done</span> by devtool!
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>WARNING: opencv-4.2.0.imx-r0 do_patch: QA Issue: Patch log indicates that patches <span style=font-weight:700>do</span> not apply cleanly. [patch-fuzz]
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>devtool reset opencv
+</span></span></code></pre></div><p>解决办法：</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>按照上面的方法尝试会产生新的问题；这个问题不影响，可以直接跳过；
+</span></span></code></pre></div><h4 id=6编译qt3d出错>6、编译qt3d出错：
+<a class=heading-link href=#6%e7%bc%96%e8%af%91qt3d%e5%87%ba%e9%94%99><i class="fa fa-link" aria-hidden=true title="Link to heading"></i>
+<span class=sr-only>Link to heading</span></a></h4><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>{standard input}: Assembler messages:
+</span></span><span style=display:flex><span>{standard input}:548692: Warning: end of file in string; <span style=font-style:italic>&#39;&#34;&#39;</span> inserted
+</span></span><span style=display:flex><span>aarch64-poky-linux-g++: fatal error: Killed signal terminated program cc1plus
+</span></span><span style=display:flex><span>compilation terminated.
+</span></span><span style=display:flex><span>ninja: build stopped: subcommand failed.
+</span></span></code></pre></div><p>解决方法：</p><pre><code>应该是内存不够，ubuntu的make命令好像比较吃内存，同上；
+</code></pre><h4 id=7编译imx-gpu-sdk报错>7、编译imx-gpu-sdk报错：
+<a class=heading-link href=#7%e7%bc%96%e8%af%91imx-gpu-sdk%e6%8a%a5%e9%94%99><i class="fa fa-link" aria-hidden=true title="Link to heading"></i>
+<span class=sr-only>Link to heading</span></a></h4><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>ERROR: When reparsing /home/ubuntu/imx8-yocto-bsp-5.4.24/sources/meta-imx/meta-sdk/recipes-graphics/imx-gpu-sdk/imx-gpu-sdk_5.5.3.bb:do_compile, the basehash value changed from 0424c5417143b3e6a25badb42c42823030d925f7820f56aa17d67ae58a2a26a0 to 2e539f474364aa01666787fb400c8117169e8b9deb4cef1419ac525fd4a29e19. The metadata is not deterministic and this needs to be fixed.
+</span></span><span style=display:flex><span>ERROR: The following commands may help:
+</span></span><span style=display:flex><span>ERROR: $ bitbake imx-gpu-sdk -c do_compile -Snone
+</span></span><span style=display:flex><span>ERROR: Then:
+</span></span><span style=display:flex><span>ERROR: $ bitbake imx-gpu-sdk -c do_compile -Sprintdiff
+</span></span></code></pre></div><p>解决办法：</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>这个问题不影响，可以直接跳过；
+</span></span></code></pre></div><h4 id=8nn-imx模块clean的时候出错>8、nn-imx模块clean的时候出错：
+<a class=heading-link href=#8nn-imx%e6%a8%a1%e5%9d%97clean%e7%9a%84%e6%97%b6%e5%80%99%e5%87%ba%e9%94%99><i class="fa fa-link" aria-hidden=true title="Link to heading"></i>
+<span class=sr-only>Link to heading</span></a></h4><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>DEBUG: Executing shell <span style=font-weight:700>function</span> do_configure
+</span></span><span style=display:flex><span>NOTE: make SDKTARGETSYSROOT=/work2/NXP/imx8-yocto-bsp-5.4.24/build_xwayland_imx8qxpc0mek-sysvinit/tmp/work/aarch64-poky-linux/nn-imx/1.0.4-r0/recipe-sysroot AQROOT=/work2/NXP/imx8-yocto-bsp-5.4.24/build_xwayland_imx8qxpc0mek-sysvinit/tmp/work/aarch64-poky-linux/nn-imx/1.0.4-r0/git clean
+</span></span><span style=display:flex><span>remove *.so and *.o
+</span></span><span style=display:flex><span>rm: cannot remove <span style=font-style:italic>&#39;*.so&#39;</span>: No such file or directory
+</span></span><span style=display:flex><span>makefile:20: recipe <span style=font-weight:700>for</span> target <span style=font-style:italic>&#39;clean&#39;</span> failed
+</span></span><span style=display:flex><span>make: *** [clean] Error 1
+</span></span><span style=display:flex><span>ERROR: oe_runmake failed
+</span></span><span style=display:flex><span>WARNING: exit code 1 from a shell command.
+</span></span><span style=display:flex><span>ERROR: Execution of <span style=font-style:italic>&#39;/work2/NXP/imx8-yocto-bsp-5.4.24/build_xwayland_imx8qxpc0mek-sysvinit/tmp/work/aarch64-poky-linux/nn-imx/1.0.4-r0/temp/run.do_configure.5748&#39;</span> failed with exit code 1:
+</span></span><span style=display:flex><span>remove *.so and *.o
+</span></span><span style=display:flex><span>rm: cannot remove <span style=font-style:italic>&#39;*.so&#39;</span>: No such file or directory
+</span></span><span style=display:flex><span>makefile:20: recipe <span style=font-weight:700>for</span> target <span style=font-style:italic>&#39;clean&#39;</span> failed
+</span></span><span style=display:flex><span>make: *** [clean] Error 1
+</span></span><span style=display:flex><span>WARNING: exit code 1 from a shell command.
+</span></span></code></pre></div><p>解决方法：</p><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>makefile文件如下
+</span></span><span style=display:flex><span>NNRT              := <span style=font-weight:700>$(</span>shell pwd<span style=font-weight:700>)</span>/nn_runtime/nnrt
+</span></span><span style=display:flex><span>NNAPI_DELEGATE    := <span style=font-weight:700>$(</span>shell pwd<span style=font-weight:700>)</span>/nn_runtime/nnapi_delegate
+</span></span><span style=display:flex><span>...
+</span></span><span style=display:flex><span>clean:
+</span></span><span style=display:flex><span>	@echo <span style=font-style:italic>&#34;remove *.so and *.o&#34;</span>
+</span></span><span style=display:flex><span>	@rm *.so
+</span></span><span style=display:flex><span>	@cd <span style=font-weight:700>$(</span>NNRT<span style=font-weight:700>)</span>;rm *.o
+</span></span><span style=display:flex><span>	@cd <span style=font-weight:700>$(</span>NNAPI_DELEGATE<span style=font-weight:700>)</span>;rm *.o
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>tmp/work/aarch64-poky-linux/nn-imx/1.0.4-r0/git
+</span></span><span style=display:flex><span>./nn_runtime/nnrt
+</span></span><span style=display:flex><span>./nn_runtime/nnapi_delegate
+</span></span><span style=display:flex><span>	直接在上述文件夹下面创建a.so,a.o文件供make clean的时候删除即可；
+</span></span></code></pre></div><h2 id=三修改systemd-与-sysvinit-支持>三、修改systemd 与 sysvinit 支持
+<a class=heading-link href=#%e4%b8%89%e4%bf%ae%e6%94%b9systemd-%e4%b8%8e-sysvinit-%e6%94%af%e6%8c%81><i class="fa fa-link" aria-hidden=true title="Link to heading"></i>
+<span class=sr-only>Link to heading</span></a></h2><p>支持用例文件：</p><h4 id=pokymeta-pokyconflocalconfsampleextended>poky/meta-poky/conf/local.conf.sample.extended
+<a class=heading-link href=#pokymeta-pokyconflocalconfsampleextended><i class="fa fa-link" aria-hidden=true title="Link to heading"></i>
+<span class=sr-only>Link to heading</span></a></h4><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=font-style:italic>#</span>
+</span></span><span style=display:flex><span><span style=font-style:italic># Use busybox/mdev for system initialization</span>
+</span></span><span style=display:flex><span><span style=font-style:italic>#</span>
+</span></span><span style=display:flex><span>VIRTUAL-RUNTIME_dev_manager = <span style=font-style:italic>&#34;busybox-mdev&#34;</span>
+</span></span><span style=display:flex><span>VIRTUAL-RUNTIME_login_manager = <span style=font-style:italic>&#34;busybox&#34;</span>
+</span></span><span style=display:flex><span>VIRTUAL-RUNTIME_init_manager = <span style=font-style:italic>&#34;busybox&#34;</span>
+</span></span><span style=display:flex><span>VIRTUAL-RUNTIME_initscripts = <span style=font-style:italic>&#34;initscripts&#34;</span>
+</span></span><span style=display:flex><span>VIRTUAL-RUNTIME_keymaps = <span style=font-style:italic>&#34;keymaps&#34;</span>
+</span></span><span style=display:flex><span>DISTRO_FEATURES_BACKFILL_CONSIDERED += <span style=font-style:italic>&#34;sysvinit&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=font-style:italic>#</span>
+</span></span><span style=display:flex><span><span style=font-style:italic># Use systemd for system initialization</span>
+</span></span><span style=display:flex><span><span style=font-style:italic>#</span>
+</span></span><span style=display:flex><span>DISTRO_FEATURES_append = <span style=font-style:italic>&#34; systemd&#34;</span>
+</span></span><span style=display:flex><span>DISTRO_FEATURES_BACKFILL_CONSIDERED += <span style=font-style:italic>&#34;sysvinit&#34;</span>
+</span></span><span style=display:flex><span>VIRTUAL-RUNTIME_login_manager = <span style=font-style:italic>&#34;shadow-base&#34;</span>
+</span></span><span style=display:flex><span>VIRTUAL-RUNTIME_init_manager = <span style=font-style:italic>&#34;systemd&#34;</span>
+</span></span><span style=display:flex><span>VIRTUAL-RUNTIME_initscripts = <span style=font-style:italic>&#34;systemd-compat-units&#34;</span>
+</span></span></code></pre></div><p>配置文件：</p><h4 id=meta-imxmeta-sdkconfdistrofsl-imx-xwaylandconf>meta-imx/meta-sdk/conf/distro/fsl-imx-xwayland.conf
+<a class=heading-link href=#meta-imxmeta-sdkconfdistrofsl-imx-xwaylandconf><i class="fa fa-link" aria-hidden=true title="Link to heading"></i>
+<span class=sr-only>Link to heading</span></a></h4><h4 id=meta-imxmeta-sdkconfdistroincludefsl-imx-preferred-envinc>meta-imx/meta-sdk/conf/distro/include/fsl-imx-preferred-env.inc
+<a class=heading-link href=#meta-imxmeta-sdkconfdistroincludefsl-imx-preferred-envinc><i class="fa fa-link" aria-hidden=true title="Link to heading"></i>
+<span class=sr-only>Link to heading</span></a></h4><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=font-style:italic># Use systemd as default init manager</span>
+</span></span><span style=display:flex><span><span style=font-style:italic>#VIRTUAL-RUNTIME_init_manager = &#34;systemd&#34;</span>
+</span></span><span style=display:flex><span><span style=font-style:italic>#PREFERRED_PROVIDER_udev = &#34;systemd&#34;</span>
+</span></span><span style=display:flex><span><span style=font-style:italic>#PREFERRED_PROVIDER_udev-utils = &#34;systemd&#34;</span>
+</span></span><span style=display:flex><span><span style=font-style:italic>#DISTRO_FEATURES_BACKFILL_CONSIDERED = &#34;sysvinit&#34;</span>
+</span></span><span style=display:flex><span><span style=font-style:italic>#POKY_DEFAULT_DISTRO_FEATURES += &#34; systemd&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>VIRTUAL-RUNTIME_init_manager = <span style=font-style:italic>&#34;busybox&#34;</span>
+</span></span><span style=display:flex><span>PREFERRED_PROVIDER_udev = <span style=font-style:italic>&#34;sysvinit&#34;</span>
+</span></span><span style=display:flex><span>PREFERRED_PROVIDER_udev-utils = <span style=font-style:italic>&#34;sysvinit&#34;</span>
+</span></span><span style=display:flex><span>DISTRO_FEATURES_BACKFILL_CONSIDERED = <span style=font-style:italic>&#34;sysvinit&#34;</span>
+</span></span><span style=display:flex><span>POKY_DEFAULT_DISTRO_FEATURES += <span style=font-style:italic>&#34; sysvinit&#34;</span>
+</span></span></code></pre></div><p>配置文件：</p><h4 id=meta-freescale-distroconfdistrofsl-xwaylandconf>meta-freescale-distro/conf/distro/fsl-xwayland.conf
+<a class=heading-link href=#meta-freescale-distroconfdistrofsl-xwaylandconf><i class="fa fa-link" aria-hidden=true title="Link to heading"></i>
+<span class=sr-only>Link to heading</span></a></h4><div class=highlight><pre tabindex=0 style=background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span><span style=font-style:italic># Remove conflicting backends</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>DISTRO_FEATURES_remove = <span style=font-style:italic>&#34;directfb&#34;</span>
+</span></span><span style=display:flex><span>DISTRO_FEATURES_append = <span style=font-style:italic>&#34; x11 wayland pam systemd&#34;</span>
+</span></span><span style=display:flex><span><span style=font-style:italic>#VIRTUAL-RUNTIME_init_manager = &#34;systemd&#34;</span>
+</span></span><span style=display:flex><span><span style=font-style:italic>#VIRTUAL-RUNTIME_init_manager = &#34;sysvinit&#34;</span>
+</span></span><span style=display:flex><span>VIRTUAL-RUNTIME_init_manager = <span style=font-style:italic>&#34;busybox&#34;</span>
+</span></span></code></pre></div><p>目前sysvinit启动方式测试是不正常的，是否支持需要继续验证。</p></div><footer><section class=see-also></section><div class=comments><script>let getTheme=window.localStorage&&window.localStorage.getItem("colorscheme");getTheme=getTheme??"preferred-color-scheme";let theme=getTheme==="dark"?"github-dark":"github-light",s=document.createElement("script");s.src="https://utteranc.es/client.js",s.setAttribute("repo","shuiyuehd/blog-comment"),s.setAttribute("issue-term","pathname"),s.setAttribute("theme",theme),s.setAttribute("crossorigin","anonymous"),s.setAttribute("async",""),document.querySelector("div.comments").innerHTML="",document.querySelector("div.comments").appendChild(s)</script></div></footer></article></section></div><footer class=footer><section class=container>©
+2022
+shuiyuehd
+·
+Powered by <a href=https://gohugo.io/>Hugo</a> & <a href=https://github.com/luizdepra/hugo-coder/>Coder</a>.</section></footer></main><script src=/js/coder.min.236049395dc3682fb2719640872958e12f1f24067bb09c327b233e6290c7edac.js integrity="sha256-I2BJOV3DaC+ycZZAhylY4S8fJAZ7sJwyeyM+YpDH7aw="></script></body></html>
